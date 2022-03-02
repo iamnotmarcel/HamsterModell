@@ -55,7 +55,7 @@ def vor():
     GPIO.output(DIR_1, CW)
     GPIO.output(DIR_2, CW)
     print("Vorwärts...")
-    for i in range(whole_cycle):
+    for i in range(4):
         dist = vornFrei()
         if dist < 20.0:
             print("Achtung - Hinderniss voraus!")
@@ -139,7 +139,7 @@ def vornFrei():
     timer = 0
     while (GPIO.input(SENS_ECHO) == 1 and timer <= 12):
         timer +=1
-        time.sleep(0.001)
+        time.sleep(0.00001)
     stop = time.time()
     
     return (stop-start) * 34300 / 2
