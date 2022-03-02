@@ -9,6 +9,6 @@ pc_test_version.py
 
 | File | Description |
 | --- | --- |
-| hamster_control | List all new or modified files |
-| hamster_test | Show file differences that haven't been staged |
-| pc_test | Show file differences that haven't been staged |
+| hamster_control | Python-File for controling Raspberry Pi - vor(), linksUm(), vornFrei() |
+| hamster_test | Python-File for hamster and pc main communication |
+| pc_test | Python-File for hamster and pc main communication |
