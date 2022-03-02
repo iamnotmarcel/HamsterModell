@@ -6,7 +6,7 @@ hamster_control_test_version.py
 hamster_test_version.py
 pc_test_version.py
 ```
-<br />
+
 | File | Description |
 | --- | --- |
 | hamster_control | List all new or modified files |
