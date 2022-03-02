@@ -8,7 +8,6 @@ Jahrgang: 2021/22
 import time  
 from time import sleep
 import RPi.GPIO as GPIO
-import threading
 
 DIR_2 = 18           # Direction-Pin vom 2ten Modul
 DIR_1 = 24           # Direction-pin vom 1sten Modul
