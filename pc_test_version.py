@@ -9,6 +9,7 @@ FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!D"
 FORWARD_MESSAGE = "!F"
 TURN_MESSAGE = "!T"
+CHECK_MESSAGE = "!C"
 IP = "127.0.0.1"
 PORT = 5050
 status_running = True
@@ -64,9 +65,10 @@ class Master():
             answer = self.__sock.recv(4096).decode(FORMAT)
             print(answer)"""
         except socket.timeout:
-            print("connection lost during send, try again")
-            self.establish_connection()
-            self.send_msg(msg)
+            print("some error occured, hamster not responding, check manually and restart")
+            
+            """self.establish_connection()
+            self.send_msg(msg)"""
             """self.__sock.send(message)
             print("msgsent")
             answer = self.__sock.recv(4096)
@@ -83,8 +85,19 @@ class Master():
 
     def disconnect(self):
         self.send_msg(DISCONNECT_MESSAGE)
+
+    def check_front(self):
+        self.send_msg(CHECK_MESSAGE)
     
 #def check_status:
+def vor():
+    my_master.forward()
+
+def linksUm():
+    my_master.turn()
+
+def vornFrei():
+    my_master.check_front()
 
 
 try:
