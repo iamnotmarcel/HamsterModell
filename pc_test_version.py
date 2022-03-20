@@ -99,6 +99,9 @@ def linksUm():
 def vornFrei():
     my_master.check_front()
 
+def ausschalten():
+    my_master.disconnect()
+
 
 try:
     print("probier ma moul")
@@ -129,6 +132,6 @@ try:
                 t.sleep(1)
                 pass
     #my_master.send_msg(DISCONNECT_MESSAGE)
-    #status_running = False
+    #status_running = False 
 finally:
     print("finally")
