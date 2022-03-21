@@ -13,7 +13,7 @@ FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!D"
 FORWARD_MESSAGE = "!F"
 TURN_MESSAGE = "!T"
-
+CHECK_MESSAGE = "!C"
 
 
 def move_forward():
@@ -24,41 +24,49 @@ def turn():
     t.sleep(2)
     print("turning")
 
+def check_front():
+    t.sleep(1)
+    check = 1
+    print("Check for Object")
+    return check
+
 def hamster(conn, addr):
-    serving = True
-    while serving:
-        msg = None
-        try:
-            msg = conn.recv(4096).decode(FORMAT)
-        except Exception:
-            print("[{}]: Connection Lost!".format(addr))
-            conn.close()
-            break
+    
+    msg = None
+    try:
+        msg = conn.recv(4096).decode(FORMAT)
+    except Exception:
+        print("[{}]: Connection Lost!".format(addr))
+        conn.close()
+        return
             
-        if msg == None:
-            print("[{}]: Empty message.".format(addr))
-            conn.close()
-            break
-            
-        elif msg == DISCONNECT_MESSAGE:
-            print("[{}]: Disconnected \nShutting down...".format(addr))
-            conn.close()
-            quit() 
+    if msg == None:
+        print("[{}]: Empty message.".format(addr))
+        conn.close()
+        return
+           
+    elif msg == DISCONNECT_MESSAGE:
+        print("[{}]: Disconnected \nShutting down...".format(addr))
+        conn.close()
+        quit() 
             # use os to shutdown pi?
             
-        else:
-            if msg == FORWARD_MESSAGE: 
-                move_forward()
+    else:
+        if msg == FORWARD_MESSAGE: 
+            move_forward()
 
-            elif msg == TURN_MESSAGE: 
-                turn()
+        elif msg == TURN_MESSAGE: 
+            turn()
+
+        elif msg == CHECK_MESSAGE:
+            msg = check_front()
                 
-            answer = msg.encode(FORMAT)
-            try: conn.send(answer)
-            except ConnectionResetError:
-                print("Connection reset, cannot reply.")
-            conn.close()
-            break
+    answer = str(msg).encode(FORMAT)
+    try: conn.send(answer)
+    except ConnectionResetError:
+        print("Connection reset, cannot reply.")
+    conn.close()
+    
 
 
 

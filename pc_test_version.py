@@ -34,7 +34,7 @@ class Pc():
                 self.__sock.settimeout(5)
                 self.__sock.connect(self.__address)
                 self.__connection_status = "connection established"
-                print("connection established")
+                #print("connection established")
                 return 0
             except socket.timeout:
                 print("Cannot connect to ", self.__address, ", timed out")
@@ -51,11 +51,11 @@ class Pc():
         message = msg.encode(FORMAT)
         try: 
             self.__sock.send(message)
-            print("msgsent")
+            #print("msgsent")
             answer = self.__sock.recv(4096).decode(FORMAT)
-            print(answer)
+            #print(answer)
             self.__sock.close()
-            print("disconnected")
+            #print("disconnected")
             self.__connection_status = "connection closed"
             return answer
         except ConnectionResetError:
@@ -66,10 +66,10 @@ class Pc():
             quit()
             
     def forward(self):
-        self.send_msg(FORWARD_MESSAGE)
+        return self.send_msg(FORWARD_MESSAGE)
 
     def turn(self):
-        self.send_msg(TURN_MESSAGE)
+        return self.send_msg(TURN_MESSAGE)
 
     def disconnect(self):
         self.send_msg(DISCONNECT_MESSAGE)
@@ -80,10 +80,10 @@ class Pc():
 
 
 def vor():
-    Pc(IPADD, PORT).forward()
+    return Pc(IPADD, PORT).forward()
 
 def linksUm():
-    Pc(IPADD, PORT).turn()
+    return Pc(IPADD, PORT).turn()
 
 def vornFrei():
     return Pc(IPADD, PORT).check_front() 
