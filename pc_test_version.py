@@ -47,7 +47,7 @@ class Pc():
             
     
     def send_msg(self, msg):
-        if self.establish_connection(): return
+        if self.establish_connection(): return -1
         message = msg.encode(FORMAT)
         try: 
             self.__sock.send(message)
@@ -57,6 +57,7 @@ class Pc():
             self.__sock.close()
             print("disconnected")
             self.__connection_status = "connection closed"
+            return answer
         except ConnectionResetError:
             print("connection reset, trying to reconnect")
             self.send_msg(msg)
@@ -74,7 +75,7 @@ class Pc():
         self.send_msg(DISCONNECT_MESSAGE)
 
     def check_front(self):
-        self.send_msg(CHECK_MESSAGE)
+        return self.send_msg(CHECK_MESSAGE)
     
 
 
@@ -85,7 +86,7 @@ def linksUm():
     Pc(IPADD, PORT).turn()
 
 def vornFrei():
-    Pc(IPADD, PORT).check_front()
+    return Pc(IPADD, PORT).check_front() 
 
 def ausschalten():
     Pc(IPADD, PORT).disconnect()
