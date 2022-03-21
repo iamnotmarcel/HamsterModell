@@ -10,73 +10,60 @@ DISCONNECT_MESSAGE = "!D"
 FORWARD_MESSAGE = "!F"
 TURN_MESSAGE = "!T"
 CHECK_MESSAGE = "!C"
-IP = "127.0.0.1"
+IPADD = "127.0.0.1"
 PORT = 5050
-status_running = True
 
+def setIP(newip):
+    global IPADD 
+    IPADD = newip
 
 if sys.version_info < (3, 6):
-    print("Es wird eine Python Version 3.6 oder höher benötigt!")
+    print("Python version 3.6 or higher required!")
     quit()      
 
-class Master():
+class Pc():
     def __init__(self, ip, port):
         self.__address = (ip, port)
         self.__message = ""
-        self.__connection_status = "Connection Lost!"
-
-    def __str__(self):
-        x = ""
-        
-        x = self.__connection_status + " " + self.__message
- 
-        return x
+        self.__connection_status = "no connection"
 
     def establish_connection(self):
-        while status_running:
+        while True:
             try:
                 self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.__sock.settimeout(5)
                 self.__sock.connect(self.__address)
                 self.__connection_status = "connection established"
-                self.__sock.settimeout(10)
-                print("connection establsiehd")
-                break
+                print("connection established")
+                return 0
+            except socket.timeout:
+                print("Cannot connect to ", self.__address, ", timed out")
+                return 1
             except ConnectionRefusedError:
                 self.__connection_status = "connection refused"
-                print("katastrophe")
+                print("connection refused, trying again in 5 seconds")
                 t.sleep(5)
                 continue
             
     
     def send_msg(self, msg):
-        #self.establish_connection()
+        if self.establish_connection(): return
         message = msg.encode(FORMAT)
         try: 
             self.__sock.send(message)
             print("msgsent")
             answer = self.__sock.recv(4096).decode(FORMAT)
             print(answer)
+            self.__sock.close()
+            print("disconnected")
+            self.__connection_status = "connection closed"
         except ConnectionResetError:
-            print("connection reset during send, try again")
-            self.establish_connection()
+            print("connection reset, trying to reconnect")
             self.send_msg(msg)
-            """self.__sock.send(message)
-            print("msgsent")
-            answer = self.__sock.recv(4096).decode(FORMAT)
-            print(answer)"""
         except socket.timeout:
-            print("some error occured, hamster not responding, check manually and restart")
+            print("socket timed out, hamster not responding, check manually and restart")
+            quit()
             
-            """self.establish_connection()
-            self.send_msg(msg)"""
-            """self.__sock.send(message)
-            print("msgsent")
-            answer = self.__sock.recv(4096)
-            answer = answer.decode(FORMAT)
-            print(answer)"""
-            
-
-
     def forward(self):
         self.send_msg(FORWARD_MESSAGE)
 
@@ -89,49 +76,31 @@ class Master():
     def check_front(self):
         self.send_msg(CHECK_MESSAGE)
     
-#def check_status:
+
+
 def vor():
-    my_master.forward()
+    Pc(IPADD, PORT).forward()
 
 def linksUm():
-    my_master.turn()
+    Pc(IPADD, PORT).turn()
 
 def vornFrei():
-    my_master.check_front()
+    Pc(IPADD, PORT).check_front()
 
 def ausschalten():
-    my_master.disconnect()
+    Pc(IPADD, PORT).disconnect()
 
-
-try:
-    print("probier ma moul")
-    my_master = Master(IP, PORT)
-    print("sall hent gang")
-    my_master.establish_connection() #des in eigene thread?
-    print("sall got ou")
-
-
-    if __name__ == "__main__":
-        while 1:
-            print("while 1")
-            try:
-                my_master.forward()
-                print("forward sent")
-                print(my_master)
-                print("\n")
+if __name__ == "__main__":
+    while 1:
+        print("while 1")
+        try:
+            vor()
+            print("forward sent")
                 
-                my_master.turn()
-                print("turn sent")
-                print(my_master)
-                print("\n")
+            linksUm()
+            print("turn sent")
                 
-            
-
-            except ConnectionRefusedError:
-                print("some error occured, trying again")
-                t.sleep(1)
-                pass
-    #my_master.send_msg(DISCONNECT_MESSAGE)
-    #status_running = False 
-finally:
-    print("finally")
+        except ConnectionRefusedError:
+            print("some error occured, trying again")
+            t.sleep(1)
+            pass

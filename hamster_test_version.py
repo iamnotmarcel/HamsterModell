@@ -19,12 +19,12 @@ TURN_MESSAGE = "!T"
 def move_forward():
     t.sleep(2)
     print("moving forward")
-#    pass
+
 def turn():
     t.sleep(2)
     print("turning")
 
-def maschinerie(conn, addr):
+def hamster(conn, addr):
     serving = True
     while serving:
         msg = None
@@ -32,43 +32,33 @@ def maschinerie(conn, addr):
             msg = conn.recv(4096).decode(FORMAT)
         except Exception:
             print("[{}]: Connection Lost!".format(addr))
+            conn.close()
             break
-            #conn.close()
-            #need reconnect -> break out of maschinerie
+            
         if msg == None:
-            print("[{}]: Connection Problem?".format(addr))
-            t.sleep(2)
-            #break
-            #conn.close()
-            #connecting, 
-        elif msg == DISCONNECT_MESSAGE:
-            print("[{}]: Disconnected".format(addr))
+            print("[{}]: Empty message.".format(addr))
+            conn.close()
             break
-            #out of maschinerie to allow reconnect
+            
+        elif msg == DISCONNECT_MESSAGE:
+            print("[{}]: Disconnected \nShutting down...".format(addr))
+            conn.close()
+            quit() 
+            # use os to shutdown pi?
+            
         else:
             if msg == FORWARD_MESSAGE: 
                 move_forward()
-                print("forward message recieved")
-                print("eppas got (it)")
-                answer = FORWARD_MESSAGE.encode(FORMAT)
-                try: conn.send(answer)
-                except ConnectionResetError:
-                    print("cheffe dced, breaking out of maschinerie for reconnect")
-                    break
-            if msg == TURN_MESSAGE: 
+
+            elif msg == TURN_MESSAGE: 
                 turn()
-                print("turn message recieved")
-                print("eppas got ")
-                answer = TURN_MESSAGE.encode(FORMAT)
-                try: conn.send(answer)
-                except ConnectionResetError:
-                    print("cheffe dced, breaking out of maschinerie for reconnect")
-                    break
-            
-            
-            #packer = msgpack.Packer()
-            #conn.sendall(packer.pack(message))        
-    conn.close()
+                
+            answer = msg.encode(FORMAT)
+            try: conn.send(answer)
+            except ConnectionResetError:
+                print("Connection reset, cannot reply.")
+            conn.close()
+            break
 
 
 
@@ -78,12 +68,8 @@ if __name__ == "__main__":
     server.bind(ADDR)
     server.listen()
 
-    print("Radls Motorhamster lafft an!")
-    #print("Da Server horcht auf alle IPs: {}".format(SERVER))
-    try: 
-        while True:
-            conn, addr = server.accept()
-            maschinerie(conn, addr)
-
-    finally:
-        print("clean!")
+    print("Hamster is ready!")
+    
+    while True:
+        conn, addr = server.accept()
+        hamster(conn, addr)
