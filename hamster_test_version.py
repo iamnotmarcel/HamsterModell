@@ -69,7 +69,6 @@ def hamster(conn, addr):
     
 
 
-
 if __name__ == "__main__":
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
