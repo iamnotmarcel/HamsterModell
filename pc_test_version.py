@@ -5,6 +5,7 @@ import time as t
 import os
 import sys
 
+TIMEOUT = 10
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!D"
 FORWARD_MESSAGE = "!F"
@@ -16,6 +17,10 @@ PORT = 5050
 def setIP(newip):
     global IPADD 
     IPADD = newip
+
+def setTIMEOUT(newtimeout):
+    global TIMEOUT
+    TIMEOUT = newtimeout
 
 if sys.version_info < (3, 6):
     print("Python version 3.6 or higher required!")
@@ -31,7 +36,7 @@ class Pc():
         while True:
             try:
                 self.__sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self.__sock.settimeout(5)
+                self.__sock.settimeout(TIMEOUT)
                 self.__sock.connect(self.__address)
                 self.__connection_status = "connection established"
                 return 0
