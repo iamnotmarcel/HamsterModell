@@ -41,7 +41,7 @@ class Pc():
                 self.__connection_status = "connection established"
                 return 0
             except socket.timeout:
-                print("Cannot connect to ", self.__address, ", timed out")
+                print("Cannot connect to [{}], timed out".format(self.__address))
                 return 1
             except ConnectionRefusedError:
                 self.__connection_status = "connection refused"

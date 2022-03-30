@@ -5,6 +5,7 @@ import msgpack
 import random
 import sys
 import time
+import os
 import vorwaerts
 
 PORT = 5050
@@ -49,7 +50,7 @@ def hamster(conn, addr):
         print("[{}]: Disconnected \nShutting down...".format(addr))
         conn.close()
         quit() 
-            # use os to shutdown pi?
+        #os.system("sudo shutdown -h now")
             
     else:
         if msg == FORWARD_MESSAGE: 
