@@ -31,7 +31,6 @@ def check_front():
     return check
 
 def hamster(conn, addr):
-    
     msg = None
     try:
         msg = conn.recv(4096).decode(FORMAT)
